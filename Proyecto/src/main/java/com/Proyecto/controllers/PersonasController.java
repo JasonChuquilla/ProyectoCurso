@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Proyecto.models.Personas;
 import com.Proyecto.services.PersonasService;
+import com.Proyecto.Utils.ModelUtil;
 
 @RestController
 @RequestMapping("/personas")
@@ -39,11 +40,38 @@ public class PersonasController {
 	@PostMapping(produces = "application/json")
 	public Personas guardarPersona(@RequestBody @Validated Personas objPersonas ) throws Exception {
 		try {
+			
 			return personasService.ingresarNuevoPersona(objPersonas);
 		}catch (Exception e) {
 			logger.info("Error en el consumo del servicio guardar Persona. " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
+	}
+	
+	private void validacionDatosPersona(Personas objPersona) throws Exception {
+		ModelUtil.validarCedula(objPersona.getCedula());
+		ModelUtil.ValidarMail(objPersona.getEmail());
+		if (!ModelUtil.validacionSoloLetras(objPersona.getApellidos()))
+			throw new Exception("Solo Letras");
+		if (!ModelUtil.validacionSoloLetras(objPersona.getNombres()))
+			throw new Exception("Solo Letras");
+		if (ModelUtil.verificarCadenaVacio(objPersona.getFechaNacimiento()))
+			throw new Exception("Llenar los datos");
+		if (ModelUtil.verificarCadenaVacio(objPersona.getCedula()))
+			throw new Exception("Llenar los datos");
+		if (ModelUtil.verificarCadenaVacio(objPersona.getApellidos()))
+			throw new Exception("Llenar los datos");
+		if (ModelUtil.verificarCadenaVacio(objPersona.getNombres()))
+			throw new Exception("Llenar los datos");
+		if (ModelUtil.verificarCadenaVacio(objPersona.getEmail()))
+			throw new Exception("Llenar los datos");
+		if (ModelUtil.verificarCadenaVacio(objPersona.getDomicilio()))
+			throw new Exception("Llenar los datos");
+		if (ModelUtil.verificarCadenaVacio(objPersona.getProvincia()))
+			throw new Exception("Llenar los datos");
+		if (ModelUtil.validacionSoloNumeros(objPersona.getTelefono()))
+			throw new Exception("Solo Numeros");
+
 	}
 	
 	@PutMapping(produces = "application/json")

@@ -8,7 +8,7 @@ public class ModelUtil {
 		return cadena.isEmpty();
 	}
 
-	public boolean validarCedula(String cedula) {
+	public static boolean validarCedula(String cedula) {
 		byte sum = 0;
 		try {
 			if (cedula.trim().length() != 10)
